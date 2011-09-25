@@ -293,65 +293,6 @@ sub Request(;***$*$) {
     RequestX(@defaults);
 }
 
-sub accept() {
-    warn "accept called as a method; you probably wanted to call Accept" if @_;
-    if ( defined($FCGI::ENV) ) {
-        %ENV = %$FCGI::ENV;
-    } else {
-        $FCGI::ENV = {%ENV};
-    }
-    my $rc = Accept($global_request);
-    for (keys %$FCGI::ENV) {
-        $ENV{$_} = $FCGI::ENV->{$_} unless exists $ENV{$_};
-    }
-
-    # not SFIO
-    $SIG{__WARN__} = $warn_handler if (tied (*STDIN));
-    $SIG{__DIE__} = $die_handler if (tied (*STDIN));
-
-    return $rc;
-}
-
-sub finish() {
-    warn "finish called as a method; you probably wanted to call Finish" if @_;
-    %ENV = %$FCGI::ENV if defined($FCGI::ENV);
-
-    # not SFIO
-    if (tied (*STDIN)) {
-        delete $SIG{__WARN__} if ($SIG{__WARN__} == $warn_handler);
-        delete $SIG{__DIE__} if ($SIG{__DIE__} == $die_handler);
-    }
-
-    Finish ($global_request);
-}
-
-sub flush() {
-    warn "flush called as a method; you probably wanted to call Flush" if @_;
-    Flush($global_request);
-}
-
-sub detach() {
-    warn "detach called as a method; you probably wanted to call Detach" if @_;
-    Detach($global_request);
-}
-
-sub attach() {
-    warn "attach called as a method; you probably wanted to call Attach" if @_;
-    Attach($global_request);
-}
-
-# deprecated
-sub set_exit_status {
-}
-
-sub start_filter_data() {
-    StartFilterData($global_request);
-}
-
-$global_request = Request();
-$warn_handler = sub { print STDERR @_ };
-$die_handler = sub { print STDERR @_ unless $^S };
-
 package FCGI::Stream;
 
 sub PRINTF {
