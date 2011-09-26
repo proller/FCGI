@@ -1,17 +1,3 @@
-use Config;
-
-open OUT, ">FCGI.xs";
-
-print "Generating FCGI.xs for Perl version $]\n";
-#unless (exists $Config{apiversion} && $Config{apiversion} >= 5.005) 
-unless ($] >= 5.005) {
-    for (qw(sv_undef diehook warnhook in_eval)) {
-    print OUT "#define PL_$_ $_\n" 
-    }
-}
-print OUT while <DATA>;
-close OUT;
-__END__
 /* $Id: FCGI.XL,v 1.10 2003/06/22 00:24:11 robs Exp $ */
 
 #include "EXTERN.h"

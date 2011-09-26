@@ -1,6 +1,6 @@
 ChangeLog
 FCGI.PL
-FCGI.XL
+FCGI.xs
 MANIFEST
 Makefile.PL
 README

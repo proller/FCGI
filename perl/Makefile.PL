@@ -79,7 +79,6 @@ $plfiles = {
     'remote.PL' => 'remote.fpl',
     'threaded.PL' => 'threaded.fpl',
     'FCGI.PL' => 'FCGI.pm',
-    'FCGI.XL' => 'FCGI.xs',
 };
 
 if ("$sys" eq "win32") {
@@ -113,7 +112,7 @@ WriteMakefile(
                 '$(MV) MANIFEST.old MANIFEST',
     },
     'clean'        => { FILES => 'config.cache fcgi_config.h' .
-                      ' FCGI.xs FCGI.c ' .
+                      ' FCGI.c ' .
                       (join ' ', values %$plfiles)},
     'PL_FILES'        => $plfiles,
     PM            => {'FCGI.pm' => '$(INST_ARCHLIBDIR)/FCGI.pm'},
@@ -131,13 +130,6 @@ if ($sys eq "win32") {
     unlink("fcgi_config.h");
     my $confdir = $prefix ? "$prefix/include/" : '';
     die $! unless copy("${confdir}fcgi_config_x86.h","fcgi_config.h");
-
-    # Win can't deal with existence of FCGI.xs or absence of FCGI.c
-    unlink("FCGI.xs");
-    open(F, ">FCGI.c"); close(F);
-    $now = time; $before = $now - 600;
-    utime $before, $before, "FCGI.c";
-    utime $now, $now, "FCGI.PL";
 } else {
     print "Running ./configure for you\n";
     print "Please read configure.readme for information on how to run it yourself\n";
