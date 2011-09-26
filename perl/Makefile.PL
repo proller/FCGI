@@ -74,12 +74,6 @@ push @extras, META_MERGE => {
     },
 } if $ExtUtils::MakeMaker::VERSION >= 6.46;
 
-$plfiles = {
-    'echo.PL' => 'echo.fpl',
-    'remote.PL' => 'remote.fpl',
-    'threaded.PL' => 'threaded.fpl',
-};
-
 if ("$sys" eq "win32") {
     push @libs, ":nosearch -lws2_32";
     push @extras, 'DEFINE' => '-DDLLAPI=__declspec(dllexport)';
@@ -111,9 +105,7 @@ WriteMakefile(
                 '$(MV) MANIFEST.old MANIFEST',
     },
     'clean'        => { FILES => 'config.cache fcgi_config.h' .
-                      ' FCGI.c ' .
-                      (join ' ', values %$plfiles)},
-    'PL_FILES'        => $plfiles,
+                      ' FCGI.c ' },
     PM            => {'FCGI.pm' => '$(INST_ARCHLIBDIR)/FCGI.pm'},
     @extras,
 );

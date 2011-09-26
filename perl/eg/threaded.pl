@@ -1,11 +1,4 @@
-use Config;
-
-open OUT, ">threaded.fpl";
-print OUT "#!$Config{perlpath}\n";
-print OUT while <DATA>;
-close OUT;
-chmod 0755, "threaded.fpl";
-__END__
+#!/usr/bin/perl
 
 use FCGI;
 use Thread;
