@@ -1,5 +1,6 @@
 # $Id: Makefile.PL,v 1.33 2002/12/15 19:40:19 skimo Exp $
 
+use 5.006;
 use ExtUtils::MakeMaker;
 use IO::File;
 use Config;
@@ -107,6 +108,7 @@ WriteMakefile(
     'clean'        => { FILES => 'config.cache fcgi_config.h' .
                       ' FCGI.c ' },
     PM            => {'FCGI.pm' => '$(INST_ARCHLIBDIR)/FCGI.pm'},
+    PREREQ_PM     => {'XSLoader' => '0'},
     @extras,
 );
 

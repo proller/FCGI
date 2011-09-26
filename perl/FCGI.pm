@@ -1,24 +1,24 @@
 package FCGI;
+use strict;
 
-require Exporter;
-require DynaLoader;
+BEGIN {
+    our $VERSION = '0.73';
 
-@ISA = qw(Exporter DynaLoader);
+    require XSLoader;
+    XSLoader::load(__PACKAGE__, $VERSION);
+}
 
-$VERSION = '0.73';
-
-bootstrap FCGI;
-
-*FAIL_ACCEPT_ON_INTR = sub() { 1 };
+sub FAIL_ACCEPT_ON_INTR () { 1 };
 
 sub Request(;***$*$) {
-    my @defaults = (\*STDIN, \*STDOUT, \*STDERR, \%ENV, 0, FAIL_ACCEPT_ON_INTR());
+    my @defaults = (\*STDIN, \*STDOUT, \*STDERR, \%ENV, 0, FAIL_ACCEPT_ON_INTR);
     $_[4] = fileno($_[4]) if defined($_[4]) && defined(fileno($_[4]));
     splice @defaults,0,@_,@_;
-    RequestX(@defaults);
+    &RequestX(@defaults);
 }
 
 package FCGI::Stream;
+use strict;
 
 sub PRINTF {
   shift->PRINT(sprintf(shift, @_));
