@@ -78,7 +78,6 @@ $plfiles = {
     'echo.PL' => 'echo.fpl',
     'remote.PL' => 'remote.fpl',
     'threaded.PL' => 'threaded.fpl',
-    'FCGI.PL' => 'FCGI.pm',
 };
 
 if ("$sys" eq "win32") {
@@ -97,7 +96,7 @@ push @extras,
 # Work around bug in previous versions of MakeMaker
 WriteMakefile(
     'NAME'        => 'FCGI',
-    'VERSION_FROM'    => 'version.pm',
+    'VERSION_FROM'    => 'FCGI.pm',
     'dist' => {
         'COMPRESS' => 'gzip -9f',
         'SUFFIX' => 'gz',

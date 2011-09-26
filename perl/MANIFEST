@@ -1,5 +1,5 @@
 ChangeLog
-FCGI.PL
+FCGI.pm
 FCGI.xs
 MANIFEST
 Makefile.PL

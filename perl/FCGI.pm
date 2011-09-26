@@ -1,40 +1,13 @@
-use Config;
-use ExtUtils::MakeMaker;
-
-open OUT, ">FCGI.pm";
-
-print "Generating FCGI.pm\n";
-print OUT <<'EOP';
-# $Id: FCGI.PL,v 1.37 2002/12/15 20:02:48 skimo Exp $
-
 package FCGI;
 
 require Exporter;
 require DynaLoader;
 
 @ISA = qw(Exporter DynaLoader);
-# Items to export into callers namespace by default. Note: do not export
-# names by default without a very good reason. Use EXPORT_OK instead.
-# Do not simply export all your public functions/methods/constants.
-@EXPORT = qw(
 
-);
+$VERSION = '0.73';
 
-EOP
-
-print OUT '$VERSION = q{'.MM->parse_version('version.pm')."};\n\n";
-
-print OUT "bootstrap FCGI;\n";
-
-print OUT '$VERSION = eval $VERSION;';
-
-print OUT while <DATA>;
-close OUT;
-__END__
-
-# Preloaded methods go here.
-
-# Autoload methods go after __END__, and are processed by the autosplit program.
+bootstrap FCGI;
 
 *FAIL_ACCEPT_ON_INTR = sub() { 1 };
 
