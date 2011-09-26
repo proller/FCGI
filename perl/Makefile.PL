@@ -14,21 +14,15 @@ use File::Copy qw(copy);
 @dist2 = qw(fcgiapp.c os_unix.c os_win32.c);
 @dist3 = (@h1, qw(fcgi_config_x86.h));
 
-GetOptions ("pure-perl!" => \$pure,
-        "use-installed:s" => \$useinstalled);
-$pure = "0" unless defined $pure;
-open(CFG,">FCGI.cfg");
-print CFG "\$pure = $pure;1;\n";
-close CFG;
+GetOptions ("use-installed:s" => \$useinstalled);
 
 $libfound = 0;
 @libs = ();
 
-if (! $pure) {
-    my $cwd = cwd();
-    my $devkit = "$cwd/..";
+my $cwd = cwd();
+my $devkit = "$cwd/..";
 
-    if (defined $useinstalled) {
+if (defined $useinstalled) {
     require ExtUtils::Liblist;
     my $libspec = $useinstalled ? "-L$useinstalled/lib " : "";
     $libspec .= "-lfcgi";
@@ -38,27 +32,27 @@ if (! $pure) {
         $libfound = 1;
         push @libs, $libspec;
     }
-    }
-    if (!$libfound && -d "$devkit/libfcgi" && -d "$devkit/include") {
-        # devkit
-        if (grep { ! -f "$devkit/include/$_" } @dist3 
-            or grep { ! -f "$devkit/libfcgi/$_" } @dist2)
-        {
-            warn "This appears to be a FastCGI devkit distribution, " .
-                "but one or more FastCGI library files are missing. \n" .
-                "Please check the integrity of the distribution.\n";
-            exit -1;
-        }
-
-        my $extrarules = join "\n",
-            map { $b = $_; $b =~ s/\.c$//; my $s="$devkit/libfcgi/$b.c";
-                "$b\$(OBJ_EXT): $s\n\t".
-                '$(CCCMD) $(CCCDLFLAGS) -I$(PERL_INC) $(DEFINE) '."$s\n"; }
-                @dist2;
-        eval 'package MY; sub postamble { $extrarules; }';
-        $prefix = $devkit;
-    }
 }
+if (!$libfound && -d "$devkit/libfcgi" && -d "$devkit/include") {
+    # devkit
+    if (grep { ! -f "$devkit/include/$_" } @dist3 
+        or grep { ! -f "$devkit/libfcgi/$_" } @dist2)
+    {
+        warn "This appears to be a FastCGI devkit distribution, " .
+            "but one or more FastCGI library files are missing. \n" .
+            "Please check the integrity of the distribution.\n";
+        exit -1;
+    }
+
+    my $extrarules = join "\n",
+        map { $b = $_; $b =~ s/\.c$//; my $s="$devkit/libfcgi/$b.c";
+            "$b\$(OBJ_EXT): $s\n\t".
+            '$(CCCMD) $(CCCDLFLAGS) -I$(PERL_INC) $(DEFINE) '."$s\n"; }
+            @dist2;
+    eval 'package MY; sub postamble { $extrarules; }';
+    $prefix = $devkit;
+}
+
 
 $sys = $^O eq 'MSWin32' ? 'win32' : 'unix';
 push @o, "fcgiapp.o", "os_$sys.o" unless $libfound;
@@ -72,8 +66,7 @@ push(@extras, CAPI => 'TRUE')
 push(@extras,
     ABSTRACT => 'Fast CGI module',
     AUTHOR   => 'Sven Verdoolaege (skimo@kotnet.org)'
-)
-    if ($ExtUtils::MakeMaker::VERSION >= 5.4301);
+) if ($ExtUtils::MakeMaker::VERSION >= 5.4301);
 
 push @extras, META_MERGE => {
     resources => {
@@ -86,23 +79,18 @@ $plfiles = {
     'remote.PL' => 'remote.fpl',
     'threaded.PL' => 'threaded.fpl',
     'FCGI.PL' => 'FCGI.pm',
+    'FCGI.XL' => 'FCGI.xs',
 };
-$plfiles->{'FCGI.XL'} = 'FCGI.xs' unless $pure;
-if ($pure) {
-    push @extras,
-    LINKTYPE => ' ';
-} else {
 
-    if ("$sys" eq "win32") {
-        push @libs, ":nosearch -lws2_32";
-        push @extras, 'DEFINE' => '-DDLLAPI=__declspec(dllexport)';
-    }
-
-    push @extras,
-        'LIBS'    => [ "@libs" ],
-        'OBJECT'    => "@o",
-        'INC'    => $inc;
+if ("$sys" eq "win32") {
+    push @libs, ":nosearch -lws2_32";
+    push @extras, 'DEFINE' => '-DDLLAPI=__declspec(dllexport)';
 }
+
+push @extras,
+    'LIBS'    => [ "@libs" ],
+    'OBJECT'    => "@o",
+    'INC'    => $inc;
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -125,14 +113,14 @@ WriteMakefile(
                 '$(MV) MANIFEST.old MANIFEST',
     },
     'clean'        => { FILES => 'config.cache fcgi_config.h' .
-                      ' FCGI.xs FCGI.c FCGI.cfg ' .
+                      ' FCGI.xs FCGI.c ' .
                       (join ' ', values %$plfiles)},
     'PL_FILES'        => $plfiles,
     PM            => {'FCGI.pm' => '$(INST_ARCHLIBDIR)/FCGI.pm'},
     @extras,
 );
 
-exit if -f 'fcgi_config.h' or $libfound or $pure;
+exit if -f 'fcgi_config.h' or $libfound;
 
 # CPAN and no installed lib found
 if ($sys eq "win32") {
