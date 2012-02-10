@@ -1,17 +1,3 @@
-use Config;
-
-open OUT, ">FCGI.xs";
-
-print "Generating FCGI.xs for Perl version $]\n";
-#unless (exists $Config{apiversion} && $Config{apiversion} >= 5.005) 
-unless ($] >= 5.005) {
-    for (qw(sv_undef diehook warnhook in_eval)) {
-    print OUT "#define PL_$_ $_\n" 
-    }
-}
-print OUT while <DATA>;
-close OUT;
-__END__
 /* $Id: FCGI.XL,v 1.10 2003/06/22 00:24:11 robs Exp $ */
 
 #include "EXTERN.h"
@@ -43,7 +29,7 @@ __END__
 #define WIDE_CHAR_DEPRECATION_MSG "Use of wide characters in %s is deprecated" \
   " and will stop wprking in a future version of FCGI"
 
-#if defined(USE_LOCKING) && defined(USE_THREADS)
+#if defined(USE_ITHREADS)
 static perl_mutex accept_mutex;
 #endif
 
@@ -163,11 +149,11 @@ FCGI_Accept(FCGP_Request* request) {
         int acceptResult;
 
         FCGI_Finish(request);
-#if defined(USE_LOCKING) && defined(USE_THREADS)
+#if defined(USE_ITHREADS)
         MUTEX_LOCK(&accept_mutex);
 #endif
         acceptResult = FCGX_Accept_r(fcgx_req);
-#if defined(USE_LOCKING) && defined(USE_THREADS)
+#if defined(USE_ITHREADS)
         MUTEX_UNLOCK(&accept_mutex);
 #endif
         if(acceptResult < 0) {
@@ -247,7 +233,7 @@ FCGI_Release_Request(FCGP_Request *req) {
 
 static void
 FCGI_Init() {
-#if defined(USE_LOCKING) && defined(USE_THREADS)
+#if defined(USE_ITHREADS)
     dTHX;
     MUTEX_INIT(&accept_mutex);
 #endif
