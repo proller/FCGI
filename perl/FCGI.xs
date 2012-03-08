@@ -469,6 +469,15 @@ GETC(stream)
     else
         ST(0) = &PL_sv_undef;
 
+SV *
+EOF(stream, called=0)
+    FCGI::Stream stream;
+    IV called;
+  CODE:
+    RETVAL = boolSV(FCGX_HasSeenEOF(stream));
+  OUTPUT:
+    RETVAL
+
 bool
 CLOSE(stream)
     FCGI::Stream stream;
