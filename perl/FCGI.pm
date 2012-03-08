@@ -49,15 +49,23 @@ sub READLINE {
 }
 
 sub OPEN {
-    $_[0]->CLOSE;
-    if (@_ == 2) {
-        return open($_[0], $_[1]);
-    } else {
-        my $rc;
-        eval("$rc = open($_[0], $_[1], $_[2])");
-        die $@ if $@;
-        return $rc;
-    }
+    require Carp;
+    Carp::croak(q/Operation 'OPEN' not supported on FCGI::Stream handle/);
+}
+
+sub SEEK {
+    require Carp;
+    Carp::croak(q/Operation 'SEEK' not supported on FCGI::Stream handle/);
+}
+
+sub TELL {
+    require Carp;
+    Carp::croak(q/Operation 'TELL' not supported on FCGI::Stream handle/);
+}
+
+sub TIEHANDLE {
+    require Carp;
+    Carp::croak(q/Operation 'TIEHANDLE' not supported on FCGI::Stream handle/);
 }
 
 # Some things (e.g. IPC::Run) use fileno to determine if a filehandle is open,
