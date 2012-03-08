@@ -68,12 +68,6 @@ sub TIEHANDLE {
     Carp::croak(q/Operation 'TIEHANDLE' not supported on FCGI::Stream handle/);
 }
 
-# Some things (e.g. IPC::Run) use fileno to determine if a filehandle is open,
-# so we return a defined, but meaningless value. (-1 being the error return
-# value from the syscall in c, meaning it can never be a valid fd no)
-# Probably a better alternative would be to return the fcgi stream fd.
-sub FILENO { -1 }
-
 1;
 
 =pod

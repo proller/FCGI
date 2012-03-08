@@ -478,6 +478,15 @@ EOF(stream, called=0)
   OUTPUT:
     RETVAL
 
+void
+FILENO(stream)
+    FCGI::Stream stream;
+  CODE:
+    if (FCGX_HasSeenEOF(stream) != 0)
+        XSRETURN_UNDEF;
+    else
+        XSRETURN_IV(-1);
+
 bool
 CLOSE(stream)
     FCGI::Stream stream;
