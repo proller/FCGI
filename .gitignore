@@ -32,3 +32,6 @@ autom4te.cache/
 configure
 perl/autom4te.cache/
 perl/configure
+/perl/FCGI-*/
+/perl/FCGI-*.tar.gz
+/perl/MYMETA.*
