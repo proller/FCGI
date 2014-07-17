@@ -75,6 +75,17 @@ push @extras, META_MERGE => {
     },
 } if $ExtUtils::MakeMaker::VERSION >= 6.46;
 
+push(@extras,
+    MIN_PERL_VERSION => '5.006',
+) if $ExtUtils::MakeMaker::VERSION >= 6.48;
+
+# not strictly necessary as everything is in core...
+#push(@extras,
+#    CONFIGURE_REQUIRES => {
+#        ...
+#    },
+#) if $ExtUtils::MakeMaker::VERSION >= 6.51_03;
+
 if ("$sys" eq "win32") {
     push @libs, ":nosearch -lws2_32";
     push @extras, 'DEFINE' => '-DDLLAPI=__declspec(dllexport)';
