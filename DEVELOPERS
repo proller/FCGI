@@ -1,0 +1,8 @@
+# how do you release this thing?
+cd perl
+./distrib
+perl Makefile.PL
+make
+make manifest
+make test
+make dist
