@@ -1,7 +1,3 @@
-/confdefs.h
-/config.cache
-/config.log
-/perl/FCGI-*
 /perl/FCGI-*.tar.gz
 /perl/FCGI-*/
 /perl/FCGI.bs
@@ -10,11 +6,12 @@
 /perl/FCGI.o
 /perl/FCGI.pm
 /perl/FCGI.xs
+/perl/MANIFEST.SKIP.bak
+/perl/MANIFEST.bak
 /perl/MYMETA.*
 /perl/Makefile
 /perl/Makefile.old
 /perl/aclocal.m4
-/perl/autom4te.cache
 /perl/autom4te.cache/
 /perl/blib
 /perl/confdefs.h
