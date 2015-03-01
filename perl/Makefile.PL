@@ -70,8 +70,19 @@ push(@extras,
 ) if ($ExtUtils::MakeMaker::VERSION >= 5.4301);
 
 push @extras, META_MERGE => {
+    'meta-spec' => { version => 2 },
+    dynamic_config => 0,
     resources => {
-        repository => 'git://git.shadowcat.co.uk/catagits/fcgi2.git',
+        repository => {
+            # r/w: catagits@git.shadowcat.co.uk:fcgi2.git
+            url => 'git://git.shadowcat.co.uk/catagits/fcgi2.git',
+            web => 'http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=catagits/fcgi2.git',
+            type => 'git',
+        },
+        bugtracker => {
+            mailto => 'bug-FCGI@rt.cpan.org',
+            web => 'https://rt.cpan.org/Public/Dist/Display.html?Name=FCGI',
+        },
     },
 } if $ExtUtils::MakeMaker::VERSION >= 6.46;
 
