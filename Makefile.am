@@ -8,7 +8,7 @@ SUBDIRS = libfcgi cgi-fcgi examples include
 
 include_HEADERS = fcgi_config.h
 
-EXTRA_DIST = LICENSE.TERMS              \
+EXTRA_DIST = LICENSE              \
              Makefile.nt                \
              cgi-fcgi/cgi-fcgi.mak      \
              examples/authorizer.mak    \

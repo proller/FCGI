@@ -6,7 +6,7 @@
 # 
 # Copyright (c) 1996 Open Market, Inc.
 #
-# See the file "LICENSE.TERMS" for information on usage and redistribution
+# See the file "LICENSE" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 # 
 #  $Id: echo.PL,v 1.2 2000/12/14 13:46:23 skimo Exp $

@@ -11,7 +11,7 @@ use File::Copy qw(copy);
 @h1 = qw(fastcgi.h fcgiapp.h fcgimisc.h fcgios.h);
 @h = (@h1, 'fcgi_config.h');
 @o = qw(FCGI.o);
-@dist1 = qw(LICENSE.TERMS);
+@dist1 = qw(LICENSE);
 @dist2 = qw(fcgiapp.c os_unix.c os_win32.c);
 @dist3 = (@h1, qw(fcgi_config_x86.h));
 
