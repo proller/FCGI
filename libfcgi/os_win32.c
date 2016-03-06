@@ -1,20 +1,16 @@
 /*
  * os_win32.c --
  *
- *
- *  Copyright (c) 1995 Open Market, Inc.
- *  All rights reserved.
- *
- *  This file contains proprietary and confidential information and
- *  remains the unpublished property of Open Market, Inc. Use,
- *  disclosure, or reproduction is prohibited except as permitted by
- *  express written license agreement with Open Market, Inc.
- *
  *  Bill Snapper
  *  snapper@openmarket.com
  *
  * (Special thanks to Karen and Bill.  They made my job much easier and
  *  significantly more enjoyable.)
+ *
+ * Copyright (c) 1996 Open Market, Inc.
+ *
+ * See the file "LICENSE" for information on usage and redistribution
+ * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 #ifndef lint
 static const char rcsid[] = "$Id: os_win32.c,v 1.35 2004/01/31 17:47:07 robs Exp $";
