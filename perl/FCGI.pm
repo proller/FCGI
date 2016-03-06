@@ -253,6 +253,13 @@ exception by using the C<bytes> pragma.
 
 Sven Verdoolaege <skimo@kotnet.org>
 
+=head1 COPYRIGHT AND LICENCE
+
+This software is copyrighted (c) 1996 by by Open Market, Inc.
+
+See the LICENSE file in this distribution for information on usage and
+redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+
 =cut
 
 __END__
