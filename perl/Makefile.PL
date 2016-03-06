@@ -74,9 +74,13 @@ push @extras, META_MERGE => {
     dynamic_config => 0,
     resources => {
         repository => {
+            # this is the real repository
             # r/w: catagits@git.shadowcat.co.uk:fcgi2.git
-            url => 'git://git.shadowcat.co.uk/catagits/fcgi2.git',
-            web => 'http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=catagits/fcgi2.git',
+            # r/o: git://git.shadowcat.co.uk/catagits/fcgi2.git
+            # web: http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=catagits/fcgi2.git
+            # this is a mirror, but can receive pull requests
+            url => 'https://github.com/perl-catalyst/FCGI.git',
+            web => 'https://github.com/perl-catalyst/FCGI',
             type => 'git',
         },
         bugtracker => {
