@@ -1,5 +1,9 @@
 Release history for FCGI
 
+Version 0.78 --  2015-03-07
+
+  o make copyright and license information more visible (RT#112535)
+
 Version 0.77 --  2014-08-05
 
   o re-release to remove build artifacts that should not have been shipped
