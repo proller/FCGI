@@ -1531,7 +1531,7 @@ static int ProcessBeginRecord(int requestId, FCGX_Stream *stream)
     if(requestId == 0 || data->contentLen != sizeof(body)) {
         return FCGX_PROTOCOL_ERROR;
     }
-    if(data->reqDataPtr->isBeginProcessed) {
+    if(data->reqDataPtr->isBeginProcessed && !(data->reqDataPtr->flags & NEXT_ON_MULTIPLEX)) {
         /*
          * The Web server is multiplexing the connection.  This library
          * doesn't know how to handle multiplexing, so respond with
