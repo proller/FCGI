@@ -63,6 +63,18 @@ static const char rcsid[] = "$Id: fcgiapp.c,v 1.35 2003/06/22 00:16:43 robs Exp 
 #define LONG_DOUBLE long double
 #endif
 
+
+FILE *log_file = 0;
+
+#define STRING2(x) #x       
+#define STRING(x) STRING2(x)
+#define LOG1(a1) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1);
+#define LOG2(a1, a2) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2);
+#define LOG3(a1, a2, a3) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2, a3);
+#define LOG4(a1, a2, a3, a4) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2, a3, a4);
+
+
+
 /*
  * Globals
  */
@@ -886,6 +898,7 @@ static void CopyAndAdvance(char **destPtr, char **srcPtr, int n)
  */
 int FCGX_FFlush(FCGX_Stream *stream)
 {
+    LOG1("FCGX_FFlush: \n");
     if(stream->isClosed || stream->isReader)
         return 0;
     stream->emptyBuffProc(stream, FALSE);
@@ -2093,6 +2106,10 @@ int FCGX_Init(void)
     if (libInitialized) {
         return 0;
     }
+
+    log_file = fopen("fcgi.log", "w");
+
+    LOG1("FCGX_Init: INITED\n");
 
     FCGX_InitRequest(&the_request, FCGI_LISTENSOCK_FILENO, 0);
 
