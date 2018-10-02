@@ -926,6 +926,8 @@ int FCGX_FClose(FCGX_Stream *stream)
 {
     if (stream == NULL) return 0;
 
+    LOG1("FCGX_FClose: \n");
+
     if(!stream->wasFCloseCalled) {
         if(!stream->isReader) {
             stream->emptyBuffProc(stream, TRUE);
@@ -1338,6 +1340,8 @@ typedef struct FCGX_Stream_Data {
  */
 static void WriteCloseRecords(struct FCGX_Stream *stream)
 {
+    LOG1("WriteCloseRecords: \n");
+
     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
     /*
      * Enter rawWrite mode so final records won't be encapsulated as
@@ -1398,6 +1402,8 @@ static int write_it_all(int fd, char *buf, int len)
  */
 static void EmptyBuffProc(struct FCGX_Stream *stream, int doClose)
 {
+    LOG2("EmptyBuffProc: %i\n", doClose);
+
     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
     int cLen, eLen;
     /*
@@ -1466,6 +1472,8 @@ static void EmptyBuffProc(struct FCGX_Stream *stream, int doClose)
  */
 static int ProcessManagementRecord(int type, FCGX_Stream *stream)
 {
+    LOG2("ProcessManagementRecord: %i\n", type);
+
     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
     ParamsPtr paramsPtr = NewParams(3);
     char **pPtr;
@@ -1540,6 +1548,7 @@ static int ProcessManagementRecord(int type, FCGX_Stream *stream)
 static int ProcessBeginRecord(int requestId, FCGX_Stream *stream)
 {
     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
+    LOG3("ProcessBeginRecord: new:%i my%i\n", requestId, data->reqDataPtr->requestId);
     FCGI_BeginRequestBody body;
     if(requestId == 0 || data->contentLen != sizeof(body)) {
         return FCGX_PROTOCOL_ERROR;
@@ -1601,6 +1610,7 @@ static int ProcessBeginRecord(int requestId, FCGX_Stream *stream)
 static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
 {
     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
+    LOG1("ProcessHeader: \n");
     int requestId;
     if(header.version != FCGI_VERSION_1) {
         return FCGX_UNSUPPORTED_VERSION;
@@ -1617,6 +1627,7 @@ static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
         return ProcessManagementRecord(header.type, stream);
     }
     if(requestId != data->reqDataPtr->requestId) {
+        LOG3("ProcessHeader: SKIP %i != %i\n", requestId, data->reqDataPtr->requestId);
         return SKIP;
     }
     if(header.type != data->type) {
