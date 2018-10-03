@@ -1618,7 +1618,7 @@ static int ProcessBeginRecord(int requestId, FCGX_Stream *stream)
 static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
 {
     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
-    LOG1("ProcessHeader: \n");
+    //LOG1("ProcessHeader: \n");
     int requestId;
     if(header.version != FCGI_VERSION_1) {
         LOG1("ProcessHeader: UNSUPPORTED\n");
@@ -1629,6 +1629,10 @@ static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
     data->contentLen = (header.contentLengthB1 << 8)
                          + header.contentLengthB0;
     data->paddingLen = header.paddingLength;
+
+    LOG5("ProcessHeader: requestId=%d type=%d contentLen=%d paddingLen=%d \n", requestId, header.type, data->contentLen, data->paddingLen );
+
+
     if(header.type == FCGI_BEGIN_REQUEST) {
         return ProcessBeginRecord(requestId, stream);
     }
@@ -1640,6 +1644,7 @@ static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
         return SKIP;
     }
     if(header.type != data->type) {
+        LOG1("ProcessHeader: FCGX_PROTOCOL_ERROR\n");
         return FCGX_PROTOCOL_ERROR;
     }
     return STREAM_RECORD;
