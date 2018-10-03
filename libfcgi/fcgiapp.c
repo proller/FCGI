@@ -2122,10 +2122,15 @@ int FCGX_Init(void)
     }
 
     char file[100];
-    sprintf(file, "/tmp/fcgi.%d.log", getpid());
+#ifdef _WIN32
+    int pid =GetCurrentProcessId();
+#else
+    int pid =getpid();
+#endif    
+    sprintf(file, "/tmp/fcgi.%d.log", pid);
     log_file = fopen(file, "w");
 
-    LOG2("FCGX_Init: INITED pid=%d\n", getpid());
+    LOG2("FCGX_Init: INITED pid=%d\n", pid);
 
     FCGX_InitRequest(&the_request, FCGI_LISTENSOCK_FILENO, 0);
 
