@@ -1613,6 +1613,7 @@ static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
     LOG1("ProcessHeader: \n");
     int requestId;
     if(header.version != FCGI_VERSION_1) {
+        LOG1("ProcessHeader: UNSUPPORTED\n");
         return FCGX_UNSUPPORTED_VERSION;
     }
     requestId =        (header.requestIdB1 << 8)
@@ -2025,6 +2026,8 @@ void FCGX_Finish(void)
  */
 void FCGX_Finish_r(FCGX_Request *reqDataPtr)
 {
+
+    LOG1("FCGX_Finish_r: \n");
     int close;
 
     if (reqDataPtr == NULL) {
@@ -2118,9 +2121,11 @@ int FCGX_Init(void)
         return 0;
     }
 
-    log_file = fopen("fcgi.log", "w");
+    char file[100];
+    sprintf(file, "/tmp/fcgi.%d.log", getpid());
+    log_file = fopen(file, "w");
 
-    LOG1("FCGX_Init: INITED\n");
+    LOG2("FCGX_Init: INITED pid=%d\n", getpid());
 
     FCGX_InitRequest(&the_request, FCGI_LISTENSOCK_FILENO, 0);
 
