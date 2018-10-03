@@ -72,6 +72,8 @@ FILE *log_file = 0;
 #define LOG2(a1, a2) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2);
 #define LOG3(a1, a2, a3) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2, a3);
 #define LOG4(a1, a2, a3, a4) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2, a3, a4);
+#define LOG5(a1, a2, a3, a4, a5) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2, a3, a4, a5);
+#define LOG6(a1, a2, a3, a4, a5, a6) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2, a3, a4, a5, a6);
 
 
 
@@ -1232,6 +1234,10 @@ static FCGI_Header MakeHeader(
     header.contentLengthB0  = (unsigned char) ((contentLength     ) & 0xff);
     header.paddingLength    = (unsigned char) paddingLength;
     header.reserved         =  0;
+
+    LOG5("MakeHeader: type=%i requestId=%i contentLength=%i paddingLength=%i \n", type, requestId, contentLength, paddingLength);
+
+
     return header;
 }
 
@@ -2029,14 +2035,17 @@ void FCGX_Finish(void)
 void FCGX_Finish_r(FCGX_Request *reqDataPtr)
 {
 
-    LOG1("FCGX_Finish_r: \n");
+    LOG2("FCGX_Finish_r: %d \n", reqDataPtr->requestId);
     int close;
 
     if (reqDataPtr == NULL) {
         return;
     }
 
+
     close = !reqDataPtr->keepConnection;
+
+    LOG3("FCGX_Finish_r: id=%d close=%d\n", reqDataPtr->requestId, close);
 
     /* This should probably use a 'status' member instead of 'in' */
     if (reqDataPtr->in) {
