@@ -2129,7 +2129,7 @@ int FCGX_Init(void)
 #else
     int pid =getpid();
 #endif    
-    sprintf(file, "/tmp/fcgi.%d.log", pid);
+    sprintf(file, "/tmp/fcgi.%d.%d.log", (int)time(0), pid);
     log_file = fopen(file, "w");
 
     LOG2("FCGX_Init: INITED pid=%d\n", pid);
@@ -2248,6 +2248,7 @@ int FCGX_Accept_r(FCGX_Request *reqDataPtr)
 
             reqDataPtr->ipcFd = OS_Accept(reqDataPtr->listen_sock, fail_on_intr, webServerAddressList);
             if (reqDataPtr->ipcFd < 0) {
+    LOG1("FCGX_Accept_r: Fail \n");
                 return (errno > 0) ? (0 - errno) : -9999;
             }
         }
@@ -2289,6 +2290,8 @@ int FCGX_Accept_r(FCGX_Request *reqDataPtr)
              */
             break;
         }
+
+    LOG1("FCGX_Accept_r: TryAgain go \n");
 
         /*
          * Close the connection and try again.
