@@ -68,7 +68,7 @@ FILE *log_file = 0;
 
 #define STRING2(x) #x       
 #define STRING(x) STRING2(x)
-#define LOG1(a1) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1);
+#define LOG1(a1) { fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1); fflush(log_file); }
 #define LOG2(a1, a2) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2);
 #define LOG3(a1, a2, a3) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2, a3);
 #define LOG4(a1, a2, a3, a4) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2, a3, a4);
@@ -85,6 +85,8 @@ static FCGX_Request the_request;
 
 void FCGX_ShutdownPending(void)
 {
+    LOG1("FCGX_ShutdownPending: \n");
+    fclose(log_file);
     OS_ShutdownPending();
 }
 
@@ -2230,6 +2232,7 @@ int FCGX_Accept_r(FCGX_Request *reqDataPtr)
     if (!libInitialized) {
         return -9998;
     }
+    LOG1("FCGX_Accept_r: \n");
 
     /* Finish the current request, if any. */
     FCGX_Finish_r(reqDataPtr);
@@ -2257,6 +2260,7 @@ int FCGX_Accept_r(FCGX_Request *reqDataPtr)
         reqDataPtr->in = NewReader(reqDataPtr, 8192, 0);
         FillBuffProc(reqDataPtr->in);
         if(!reqDataPtr->isBeginProcessed) {
+    LOG1("FCGX_Accept_r: TryAgain \n");
             goto TryAgain;
         }
         {
