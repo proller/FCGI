@@ -1348,9 +1348,10 @@ typedef struct FCGX_Stream_Data {
  */
 static void WriteCloseRecords(struct FCGX_Stream *stream)
 {
-    LOG1("WriteCloseRecords: \n");
 
     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
+
+    LOG1("WriteCloseRecords: requestId=%d nWriters=%d \n", data->reqDataPtr->requestId, data->reqDataPtr->nWriters);
     /*
      * Enter rawWrite mode so final records won't be encapsulated as
      * stream data.
@@ -1630,7 +1631,7 @@ static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
                          + header.contentLengthB0;
     data->paddingLen = header.paddingLength;
 
-    LOG5("ProcessHeader: requestId=%d type=%d contentLen=%d paddingLen=%d \n", requestId, header.type, data->contentLen, data->paddingLen );
+    LOG6("ProcessHeader: currentId=%d requestId=%d type=%d contentLen=%d paddingLen=%d \n", data->reqDataPtr->requestId, requestId, header.type, data->contentLen, data->paddingLen );
 
 
     if(header.type == FCGI_BEGIN_REQUEST) {
