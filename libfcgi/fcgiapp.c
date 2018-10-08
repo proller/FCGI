@@ -1351,7 +1351,7 @@ static void WriteCloseRecords(struct FCGX_Stream *stream)
 
     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
 
-    LOG1("WriteCloseRecords: requestId=%d nWriters=%d \n", data->reqDataPtr->requestId, data->reqDataPtr->nWriters);
+    LOG3("WriteCloseRecords: requestId=%d nWriters=%d \n", data->reqDataPtr->requestId, data->reqDataPtr->nWriters);
     /*
      * Enter rawWrite mode so final records won't be encapsulated as
      * stream data.
