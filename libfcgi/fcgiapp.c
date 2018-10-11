@@ -1286,7 +1286,7 @@ static FCGI_UnknownTypeBody MakeUnknownTypeBody(
     FCGI_UnknownTypeBody body;
     body.type = (unsigned char) type;
     memset(body.reserved, 0, sizeof(body.reserved));
-    LOG3("FCGI_UnknownTypeBody: \n");
+    LOG1("FCGI_UnknownTypeBody: \n");
     return body;
 }
 
@@ -2390,6 +2390,8 @@ void FCGX_SetExitStatus(int status, FCGX_Stream *stream)
 {
     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
     data->reqDataPtr->appStatus = status;
+    LOG3("FCGX_SetExitStatus: id=%d status=%d\n", data->reqDataPtr->requestId, status);
+
 }
 
 
