@@ -64,6 +64,8 @@ static const char rcsid[] = "$Id: fcgiapp.c,v 1.35 2003/06/22 00:16:43 robs Exp 
 #endif
 
 
+#include <time.h>
+#include <unistd.h>
 FILE *log_file = 0;
 
 #define STRING2(x) #x       
@@ -1284,6 +1286,7 @@ static FCGI_UnknownTypeBody MakeUnknownTypeBody(
     FCGI_UnknownTypeBody body;
     body.type = (unsigned char) type;
     memset(body.reserved, 0, sizeof(body.reserved));
+    LOG3("FCGI_UnknownTypeBody: \n");
     return body;
 }
 
@@ -1486,9 +1489,9 @@ static void EmptyBuffProc(struct FCGX_Stream *stream, int doClose)
  */
 static int ProcessManagementRecord(int type, FCGX_Stream *stream)
 {
-    LOG2("ProcessManagementRecord: %i\n", type);
 
     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
+    LOG3("ProcessManagementRecord: type=%i myid=%i\n", type, data->reqDataPtr->requestId);
     ParamsPtr paramsPtr = NewParams(3);
     char **pPtr;
     char response[64]; /* 64 = 8 + 3*(1+1+14+1)* + padding */
@@ -1562,9 +1565,10 @@ static int ProcessManagementRecord(int type, FCGX_Stream *stream)
 static int ProcessBeginRecord(int requestId, FCGX_Stream *stream)
 {
     FCGX_Stream_Data *data = (FCGX_Stream_Data *)stream->data;
-    LOG3("ProcessBeginRecord: new:%i my%i\n", requestId, data->reqDataPtr->requestId);
+    LOG4("ProcessBeginRecord: new=%i myid=%i isBeginProcessed=%i \n", requestId, data->reqDataPtr->requestId, data->reqDataPtr->isBeginProcessed);
     FCGI_BeginRequestBody body;
     if(requestId == 0 || data->contentLen != sizeof(body)) {
+    LOG2("ProcessBeginRecord: FCGX_PROTOCOL_ERROR1 myid=%i \n", data->reqDataPtr->requestId);
         return FCGX_PROTOCOL_ERROR;
     }
     if(data->reqDataPtr->isBeginProcessed && !(data->reqDataPtr->flags & NEXT_ON_MULTIPLEX)) {
@@ -1591,11 +1595,15 @@ static int ProcessBeginRecord(int requestId, FCGX_Stream *stream)
     data->reqDataPtr->requestId = requestId;
     if(FCGX_GetStr((char *) &body, sizeof(body), stream)
             != sizeof(body)) {
+    LOG3("ProcessBeginRecord: FCGX_PROTOCOL_ERROR2 myid=%i sizeof(body)=%i \n", data->reqDataPtr->requestId, (int)sizeof(body));
         return FCGX_PROTOCOL_ERROR;
     }
     data->reqDataPtr->keepConnection = (body.flags & FCGI_KEEP_CONN);
     data->reqDataPtr->role = (body.roleB1 << 8) + body.roleB0;
     data->reqDataPtr->isBeginProcessed = TRUE;
+
+    LOG4("ProcessBeginRecord: myid=%i keepConnection=%i role=%i \n", data->reqDataPtr->requestId, data->reqDataPtr->keepConnection, data->reqDataPtr->role);
+
     return BEGIN_RECORD;
 }
 
