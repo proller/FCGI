@@ -960,6 +960,8 @@ int FCGX_FClose(FCGX_Stream *stream)
  */
 static void SetError(FCGX_Stream *stream, int FCGI_errno)
 {
+
+    LOG2("SetError: FCGI_errno=%d\n", FCGI_errno);
     /*
      * Preserve only the first error.
      */
@@ -1261,6 +1263,9 @@ static FCGI_EndRequestBody MakeEndRequestBody(
     body.appStatusB0    = (unsigned char) ((appStatus      ) & 0xff);
     body.protocolStatus = (unsigned char) protocolStatus;
     memset(body.reserved, 0, sizeof(body.reserved));
+
+    LOG3("FCGI_EndRequestBody: protocolStatus=%i appStatus=%i \n", protocolStatus, appStatus);
+
     return body;
 }
 
