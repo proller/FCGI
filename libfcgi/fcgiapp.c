@@ -70,12 +70,12 @@ FILE *log_file = 0;
 
 #define STRING2(x) #x       
 #define STRING(x) STRING2(x)
-#define LOG1(a1) { fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1); fflush(log_file); }
-#define LOG2(a1, a2) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2);
-#define LOG3(a1, a2, a3) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2, a3);
-#define LOG4(a1, a2, a3, a4) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2, a3, a4);
-#define LOG5(a1, a2, a3, a4, a5) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2, a3, a4, a5);
-#define LOG6(a1, a2, a3, a4, a5, a6) fprintf(log_file, STRING(__FILE__) ":" STRING(__LINE__) "  " a1, a2, a3, a4, a5, a6);
+#define LOG1(a1) { fprintf(log_file, "%ld " STRING(__FILE__) ":" STRING(__LINE__) "  " a1, time(0)); fflush(log_file); }
+#define LOG2(a1, a2) { fprintf(log_file, "%ld " STRING(__FILE__) ":" STRING(__LINE__) "  " a1, time(0), a2); fflush(log_file); }
+#define LOG3(a1, a2, a3) { fprintf(log_file, "%ld " STRING(__FILE__) ":" STRING(__LINE__) "  " a1, time(0), a2, a3); fflush(log_file); }
+#define LOG4(a1, a2, a3, a4) { fprintf(log_file, "%ld " STRING(__FILE__) ":" STRING(__LINE__) "  " a1, time(0), a2, a3, a4); fflush(log_file); }
+#define LOG5(a1, a2, a3, a4, a5) { fprintf(log_file, "%ld " STRING(__FILE__) ":" STRING(__LINE__) "  " a1, time(0), a2, a3, a4, a5); fflush(log_file); }
+#define LOG6(a1, a2, a3, a4, a5, a6) { fprintf(log_file, "%ld " STRING(__FILE__) ":" STRING(__LINE__) "  " a1, time(0), a2, a3, a4, a5, a6); fflush(log_file); }
 
 
 
