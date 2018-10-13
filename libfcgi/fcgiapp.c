@@ -1589,6 +1589,11 @@ static int ProcessBeginRecord(int requestId, FCGX_Stream *stream)
 
         return SKIP;
     }
+
+    if(data->reqDataPtr->isBeginProcessed && (data->reqDataPtr->flags & NEXT_ON_MULTIPLEX)) {
+        LOG1("ProcessBeginRecord: WTF1 NEXT_ON_MULTIPLEX continue next.\n");
+    }
+
     /*
      * Accept this new request.  Read the record body.
      */
