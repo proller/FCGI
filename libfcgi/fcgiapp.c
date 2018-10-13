@@ -1598,9 +1598,10 @@ static int ProcessBeginRecord(int requestId, FCGX_Stream *stream)
      * Accept this new request.  Read the record body.
      */
     data->reqDataPtr->requestId = requestId;
-    if(FCGX_GetStr((char *) &body, sizeof(body), stream)
+    size_t readed = FCGX_GetStr((char *) &body, sizeof(body), stream);
+    if(readed
             != sizeof(body)) {
-    LOG3("ProcessBeginRecord: FCGX_PROTOCOL_ERROR2 myid=%i sizeof(body)=%i \n", data->reqDataPtr->requestId, (int)sizeof(body));
+    LOG4("ProcessBeginRecord: FCGX_PROTOCOL_ERROR2 myid=%i sizeof(body)=%li readed=%li\n", data->reqDataPtr->requestId, sizeof(body), readed);
         return FCGX_PROTOCOL_ERROR;
     }
     data->reqDataPtr->keepConnection = (body.flags & FCGI_KEEP_CONN);
