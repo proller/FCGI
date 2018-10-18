@@ -1661,6 +1661,15 @@ static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
     }
     if(requestId != data->reqDataPtr->requestId) {
         LOG3("ProcessHeader: SKIP and return %i != %i\n", requestId, data->reqDataPtr->requestId);
+        if (header.type == 4) {
+          if (data->contentLen > 0)
+            LOG1("ProcessHeader: Looks like only type=1 lost, can emulate here");
+          if (data->contentLen == 0)
+            LOG1("ProcessHeader: Looks like type=1 AND type=4 lost, should end here");
+        } else {
+            LOG2("ProcessHeader: woow, only type=%d recieved first", header.type);
+        }
+
         // try emulate begin here
 
         FCGI_EndRequestRecord endRequestRecord;
