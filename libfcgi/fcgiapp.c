@@ -1667,7 +1667,7 @@ static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
           if (data->contentLen == 0)
             LOG1("ProcessHeader: Looks like type=1 AND type=4 lost, should end here");
         } else {
-            LOG2("ProcessHeader: woow, only type=%d recieved first", header.type);
+            LOG2("ProcessHeader: woow, only type=%d recieved first ", (int)header.type);
         }
 
         // try emulate begin here
