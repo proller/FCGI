@@ -1660,7 +1660,7 @@ static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
         return ProcessManagementRecord(header.type, stream);
     }
     if(requestId != data->reqDataPtr->requestId) {
-        if (data->reqDataPtr->flags & NEXT_ON_MULTIPLEX) {
+        if(data->reqDataPtr->flags & NEXT_ON_MULTIPLEX) {
             LOG3("ProcessHeader: SKIP and return %i != %i\n", requestId, data->reqDataPtr->requestId);
             if (header.type == 4) {
                 if (data->contentLen > 0)
@@ -1676,7 +1676,7 @@ static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
             FCGI_EndRequestRecord endRequestRecord;
             endRequestRecord.header = MakeHeader(FCGI_END_REQUEST, requestId, sizeof(endRequestRecord.body), 0);
             endRequestRecord.body = MakeEndRequestBody(0, FCGI_CANT_MPX_CONN);
-            if (write_it_all(data->reqDataPtr->ipcFd, (char *)&endRequestRecord, sizeof(endRequestRecord)) < 0) {
+            if(write_it_all(data->reqDataPtr->ipcFd, (char *)&endRequestRecord, sizeof(endRequestRecord)) < 0) {
                 SetError(stream, OS_Errno);
                 return -1;
             }
