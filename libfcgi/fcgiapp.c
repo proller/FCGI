@@ -1660,26 +1660,26 @@ static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
         return ProcessManagementRecord(header.type, stream);
     }
     if(requestId != data->reqDataPtr->requestId) {
-        LOG3("ProcessHeader: SKIP and return %i != %i\n", requestId, data->reqDataPtr->requestId);
-        if (header.type == 4) {
-          if (data->contentLen > 0)
-            LOG1("ProcessHeader: Looks like only type=1 lost, can emulate here");
-          if (data->contentLen == 0)
-            LOG1("ProcessHeader: Looks like type=1 AND type=4 lost, should end here");
-        } else {
+        if (data->reqDataPtr->flags & NEXT_ON_MULTIPLEX) {
+          LOG3("ProcessHeader: SKIP and return %i != %i\n", requestId, data->reqDataPtr->requestId);
+          if (header.type == 4) {
+            if (data->contentLen > 0)
+              LOG1("ProcessHeader: Looks like only type=1 lost, can emulate here");
+            if (data->contentLen == 0)
+              LOG1("ProcessHeader: Looks like type=1 AND type=4 lost, should end here");
+          } else {
             LOG2("ProcessHeader: woow, only type=%d recieved first ", (int)header.type);
-        }
+          }
 
-        // try emulate begin here
+          // try emulate begin here
 
-        FCGI_EndRequestRecord endRequestRecord;
-        endRequestRecord.header = MakeHeader(FCGI_END_REQUEST,
-                requestId, sizeof(endRequestRecord.body), 0);
-        endRequestRecord.body
-                = MakeEndRequestBody(0, FCGI_CANT_MPX_CONN);
-        if (write_it_all(data->reqDataPtr->ipcFd, (char *)&endRequestRecord, sizeof(endRequestRecord)) < 0) {
+          FCGI_EndRequestRecord endRequestRecord;
+          endRequestRecord.header = MakeHeader(FCGI_END_REQUEST, requestId, sizeof(endRequestRecord.body), 0);
+          endRequestRecord.body = MakeEndRequestBody(0, FCGI_CANT_MPX_CONN);
+          if (write_it_all(data->reqDataPtr->ipcFd, (char *)&endRequestRecord, sizeof(endRequestRecord)) < 0) {
             SetError(stream, OS_Errno);
             return -1;
+          }
         }
 
         return SKIP;
