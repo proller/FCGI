@@ -1604,6 +1604,16 @@ static int ProcessHeader(FCGI_Header header, FCGX_Stream *stream)
         return ProcessManagementRecord(header.type, stream);
     }
     if(requestId != data->reqDataPtr->requestId) {
+        if(data->reqDataPtr->flags & NEXT_ON_MULTIPLEX) {
+            FCGI_EndRequestRecord endRequestRecord;
+            endRequestRecord.header = MakeHeader(FCGI_END_REQUEST, requestId, sizeof(endRequestRecord.body), 0);
+            endRequestRecord.body = MakeEndRequestBody(0, FCGI_CANT_MPX_CONN);
+            if(write_it_all(data->reqDataPtr->ipcFd, (char *)&endRequestRecord, sizeof(endRequestRecord)) < 0) {
+                SetError(stream, OS_Errno);
+                return -1;
+            }
+        }
+
         return SKIP;
     }
     if(header.type != data->type) {
